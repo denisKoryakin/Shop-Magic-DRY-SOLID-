@@ -1,13 +1,19 @@
 package com.company.shop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Basket {
 
-    Shop shop = Shop.getInstance();
-    Delivery delivery = Delivery.getInstance();
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products;
+    private Map<Product, Integer> basket;
+
+    private Basket() {
+        this.products = new ArrayList<>();
+        this.basket = new HashMap<>();
+    }
 
     private static Basket instance;
 
@@ -20,44 +26,20 @@ public class Basket {
         return products;
     }
 
-    public void putToBasket(Product product) {
-        int counter = 0;
-        for (int i = 0; i < shop.getProducts().size(); i++) {
-//            если данный товар имеется в магазине
-            if (shop.getProducts().get(i).getName().equals(product.getName())) {
-//                если в магазине хватает этого товара
-                if (shop.getProducts().get(i).getCount() >= product.getCount()) {
-//                    убрать его с полки магазина
-                    shop.getProducts().get(i).setCount(shop.getProducts().get(i).getCount() - product.getCount());
-//                    помещаем в корзину
-                    for (Product value : this.products) {
-//                        если такой товар уже есть в корзине
-                        if (product.getName().equals(value.getName())) {
-//                            только увеличить его количество
-                            value.setCount(value.getCount() + product.getCount());
-                            break;
-                        } else {
-                            counter++;
-                        }
-                    }
-                    if(counter == this.products.size()) {
-//                    иначе добавить новую позицию
-                        this.products.add(product);
-                        counter = 0;
-                    }
-                }
-                break;
-            }
-        }
-        System.out.println("Товар " + product.getName() +
-                " в количестве " + product.getCount() + (product.getCategory().equals(Category.FOOD) ? " кг" : " шт.")
-                + " добавлен в корзину");
-        System.out.println("Ваша корзина: " + this.products.toString());
+    public Map<Product, Integer> getBasket() {
+        return basket;
     }
 
-    // TODO: 09.02.2023 сделать в асисте
-    public void transferToDelivery() throws InterruptedException {
-        delivery.setProductToDelivery(this.products);
-        this.products.clear();
+    public boolean putToBasket(Product product, Integer count) {
+        if (basket.containsKey(product)) {
+//                находим и увеличиваем количество
+            basket.replace(product, (basket.get(product) + count));
+        } else {
+//                не находим и добавляем
+            basket.put(product, count);
+//                добавляем в перепись товаров
+            products.add(product);
+        }
+        return true;
     }
 }

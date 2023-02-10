@@ -7,16 +7,14 @@ public abstract class Product {
     private final Category category;
     private final String name;
     private final String maker;
-    private int count;
     private float rating;
     private int scoreCount;
 
-    public Product(float price, Category category, String name, String maker, int count) {
+    public Product(float price, Category category, String name, String maker) {
         this.price = price;
         this.category = category;
         this.name = name;
         this.maker = maker;
-        this.count = count;
     }
 
     public float getPrice() {
@@ -35,15 +33,11 @@ public abstract class Product {
         return maker;
     }
 
-    public int getCount() {
-        return count;
-    }
-
     public float getRating() {
         return rating;
     }
 
-    protected void setRating(int rating) {
+    public void setRating(int rating) {
         try {
             while (true) {
                 if (rating <= 10) {
@@ -57,12 +51,6 @@ public abstract class Product {
         }
     }
 
-    protected void setCount(int newCount) {
-        if (newCount >= 0) {
-            this.count = newCount;
-        }
-    }
-
     @Override
     public String toString() {
         return String.format("%15s", name) +
@@ -70,8 +58,7 @@ public abstract class Product {
                 + String.format("%7s", price) +
                 ", производитель: "
                 + String.format("%17s", maker) +
-                ", рейтинг: " + rating +
-                ", количество: " + count + (this.category.equals(Category.FOOD) ? " кг" : " шт.");
+                ", рейтинг: " + rating;
     }
 
     public abstract Object getSubCategory();

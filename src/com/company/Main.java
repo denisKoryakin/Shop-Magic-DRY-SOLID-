@@ -7,5 +7,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Assistant assistant = new Assistant();
         assistant.speak();
+        assistant.close();
     }
 }
